@@ -6,7 +6,10 @@
 
 struct empty_stack: std::exception
 {
-    const char* what() const throw();
+    std::string s;
+    empty_stack(std::string ss) : s(ss){}
+    ~empty_stack() throw (){}
+    const char* what() const throw(){return s.c_str();}
 };
 
 template<typename T>
@@ -35,7 +38,7 @@ public:
     {
         std::lock_guard<std::mutex> lock(m);
         if(data.empty())
-            throw empty_stack();
+            throw empty_stack("empty stack exception");
         std::shared_ptr<T> res(std::make_shared<T> (data.top()));
         data.pop();
         return res;
@@ -45,7 +48,7 @@ public:
     {
         std:: lock_guard<std::mutex> lock(m);
         if(data.empty()) 
-            throw empty_stack();
+            throw empty_stack("empty stack exception");
         value = data.top();
         data.pop();
     }
@@ -77,10 +80,13 @@ int main()
     std::chrono::milliseconds duration(2000);
     std::this_thread::sleep_for(duration);
 
-    for(int i = 101;i>=0;i--){
-       std::shared_ptr<int>  j = (stack.pop());
-
-        std::cout<<*j<<","<<std::endl;
+    for(int i = 104;i>=0;i--){
+        try{
+            std::shared_ptr<int>  j = (stack.pop());
+            std::cout<<*j<<","<<std::endl;
+        }catch(empty_stack& caught){
+            std::cout<<"Got "<<caught.what()<<std::endl;
+        }
     }
     return 0;
 }
