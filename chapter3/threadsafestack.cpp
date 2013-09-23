@@ -36,7 +36,7 @@ public:
         std::lock_guard<std::mutex> lock(m);
         if(data.empty())
             throw empty_stack();
-        std::shared_ptr<T> const res(std::make_shared<T> (data.top()));
+        std::shared_ptr<T> res(std::make_shared<T> (data.top()));
         data.pop();
         return res;
     }
@@ -78,7 +78,7 @@ int main()
     std::this_thread::sleep_for(duration);
 
     for(int i = 101;i>=0;i--){
-        int * j = &*(stack.pop());
+       std::shared_ptr<int>  j = (stack.pop());
 
         std::cout<<*j<<","<<std::endl;
     }
