@@ -1,0 +1,4 @@
+1.Avoid nested locks. Don't aquire a lock if you already hold one.
+2.Avoid calling user supplied code while holding a lock. It can do anything.
+3.Acquire locks in a fixed order.
+4.Use a lock hirarchy4.Use a lock hirarchy4.Use a lock hirarchy4.Use a lock hirarchy

@@ -39,7 +39,7 @@ public:
         std::lock_guard<std::mutex> lock(m);
         if(data.empty())
             throw empty_stack("empty stack exception");
-        std::shared_ptr<T> res(std::make_shared<T> (data.top()));
+        std::shared_ptr<T> const res(std::make_shared<T> (data.top()));
         data.pop();
         return res;
     }
@@ -60,11 +60,20 @@ public:
     }
 };
 
-void pusher1(threadsafe_stack<int> & stack)
+void pusher(threadsafe_stack<int> & stack)
 {
     for(int i = 0; i < 100; i++)
     {
         stack.push(i);
+    }
+}
+
+void popper(threadsafe_stack<int> & stack)
+{
+
+    for(int i = 0; i< 100; i++)
+    {    
+        stack.pop();
     }
 }
 
@@ -74,7 +83,7 @@ int main()
     stack.push(5);
     stack.push(23);
     stack.push(11);
-    std::thread t(pusher1,std::ref(stack));
+    std::thread t(pusher,std::ref(stack));
     t.join();
 
     std::chrono::milliseconds duration(2000);
